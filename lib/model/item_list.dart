@@ -23,7 +23,7 @@ class _ItemListState extends State<ItemList> {
             style: TextStyle(fontSize: 18.0),
           ),
           Text(
-            'Nosso classico da casa que de mais, nao e mesmo',
+            'Nosso classico da casa que de mais, nao e mesmo, ne',
             style: TextStyle(fontSize: 15.0),
           ),
           Text(
