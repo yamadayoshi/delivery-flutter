@@ -1,6 +1,6 @@
-# delivery
+# Delivery Flutter App
 
-Delivery App.
+Some Delivery Flutter App.
 
 ## Getting Started
 
