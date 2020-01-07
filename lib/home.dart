@@ -33,12 +33,15 @@ class _HomeState extends State<Home> {
             ),
             Expanded(
               flex: 1,
-              child: Container(
-                alignment: Alignment.center,
-                color: Colors.orangeAccent,
-                child: Text(
-                  'Sacola',
-                  style: TextStyle(fontSize: 20.0),
+              child: GestureDetector(
+                onTap: _callCheckout,
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.orangeAccent,
+                  child: Text(
+                    'Sacola',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
                 ),
               ),
             ),
@@ -46,5 +49,26 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  void _callCheckout() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.all(12.0),
+                  child: Text(
+                    'Itens na sacola',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                ),
+                ListView.builder(itemBuilder: null)
+              ],
+            ),
+          );
+        });
   }
 }
