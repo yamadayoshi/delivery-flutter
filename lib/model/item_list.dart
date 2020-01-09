@@ -1,3 +1,4 @@
+import 'package:delivery/components/bottom_buttom.dart';
 import 'package:flutter/material.dart';
 
 class ItemList extends StatefulWidget {
@@ -6,6 +7,12 @@ class ItemList extends StatefulWidget {
 }
 
 class _ItemListState extends State<ItemList> {
+  List itens = [
+    'Hamburguer de carne',
+    'Maravilhoso hamburguer da casa',
+    'R\$22,90'
+  ];
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -18,15 +25,15 @@ class _ItemListState extends State<ItemList> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'Item title',
+            itens[0],
             style: TextStyle(fontSize: 18.0),
           ),
           Text(
-            'Nosso classico da casa que de mais, nao e mesmo, ne',
+            itens[1],
             style: TextStyle(fontSize: 15.0),
           ),
           Text(
-            'R\$23,90',
+            itens[2],
             style: TextStyle(fontSize: 18.0),
           )
         ],
@@ -50,50 +57,17 @@ class _ItemListState extends State<ItemList> {
                       size: 80.0,
                     ),
                     Text(
-                      'Item title',
+                      itens[0],
                       style: TextStyle(fontSize: 22.0),
                     ),
                     Text(
-                      'Item title',
+                      itens[1],
                       style: TextStyle(fontSize: 18.0),
                     ),
                   ],
                 ),
               ),
-              Expanded(
-                flex: 1,
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      child: FlatButton(
-                        onPressed: null,
-                        child: Text(
-                          'Adicionar',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        FlatButton(
-                          child: Text(
-                            '-',
-                            style: TextStyle(
-                                color: Colors.black26, fontSize: 40.0),
-                          ),
-                        ),
-                        FlatButton(
-                          child: Text(
-                            '+',
-                            style: TextStyle(
-                                color: Colors.black26, fontSize: 40.0),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              BottomButtom(),
             ],
           ),
         );
