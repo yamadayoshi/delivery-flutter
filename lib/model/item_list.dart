@@ -1,4 +1,4 @@
-import 'package:delivery/components/bottom_buttom.dart';
+import 'package:delivery/components/quantity_button.dart';
 import 'package:flutter/material.dart';
 
 class ItemList extends StatefulWidget {
@@ -49,7 +49,7 @@ class _ItemListState extends State<ItemList> {
           child: Column(
             children: <Widget>[
               Expanded(
-                flex: 5,
+                flex: 6,
                 child: Column(
                   children: <Widget>[
                     Icon(
@@ -67,7 +67,7 @@ class _ItemListState extends State<ItemList> {
                   ],
                 ),
               ),
-              BottomButtom(),
+              QuantityButton(),
             ],
           ),
         );

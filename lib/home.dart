@@ -1,6 +1,8 @@
 import 'package:delivery/model/item_list.dart';
 import 'package:flutter/material.dart';
 
+import 'components/bottom_button.dart';
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -31,20 +33,7 @@ class _HomeState extends State<Home> {
                 },
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: GestureDetector(
-                onTap: _callCheckout,
-                child: Container(
-                  alignment: Alignment.center,
-                  color: Colors.orangeAccent,
-                  child: Text(
-                    'Sacola',
-                    style: TextStyle(fontSize: 20.0),
-                  ),
-                ),
-              ),
-            ),
+            BottomButton('Sacola', _callCheckout)
           ],
         ),
       ),
@@ -55,19 +44,21 @@ class _HomeState extends State<Home> {
     showModalBottomSheet(
         context: context,
         builder: (context) {
-          return Container(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.all(12.0),
+          return Column(
+            children: <Widget>[
+              Expanded(
+                flex: 6,
+                child: Container(
+                  margin: EdgeInsets.only(top: 12.0),
                   child: Text(
                     'Itens na sacola',
-                    style: TextStyle(fontSize: 20.0),
+                    style: TextStyle(fontSize: 22.0),
                   ),
                 ),
-//                Expanded(child: ListView.builder(itemBuilder: null))
-              ],
-            ),
+              ),
+//              Container(child: ListView.builder(itemBuilder: null)),
+              BottomButton('Pedir', (){Navigator.pop(context);}),
+            ],
           );
         });
   }

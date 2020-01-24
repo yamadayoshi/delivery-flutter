@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class BottomButtom extends StatefulWidget {
+class QuantityButton extends StatefulWidget {
   @override
-  _BottomButtomState createState() => _BottomButtomState();
+  _QuantityButtonState createState() => _QuantityButtonState();
 }
 
-class _BottomButtomState extends State<BottomButtom> {
+class _QuantityButtonState extends State<QuantityButton> {
   TextEditingController _controller;
   int qtd = 1;
 
@@ -30,7 +30,7 @@ class _BottomButtomState extends State<BottomButtom> {
                 },
                 child: Text(
                   'Adicionar',
-                  style: TextStyle(color: Colors.black, fontSize: 20.0),
+                  style: TextStyle(color: Colors.black, fontSize: 15.0),
                 ),
               ),
             ),
