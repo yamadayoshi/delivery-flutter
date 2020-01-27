@@ -1,18 +1,21 @@
-import 'package:delivery/components/quantity_button.dart';
+import 'package:delivery/component/item_checkout.dart';
+import 'package:delivery/component/quantity_button.dart';
+import 'package:delivery/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class ItemList extends StatefulWidget {
+  final int _id;
+  final String _title;
+  final String _description;
+  final double _price;
+
+  ItemList(this._id, this._title, this._description, this._price);
+
   @override
   _ItemListState createState() => _ItemListState();
 }
 
 class _ItemListState extends State<ItemList> {
-  List itens = [
-    'Hamburguer de carne',
-    'Maravilhoso hamburguer da casa',
-    'R\$22,90'
-  ];
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -25,15 +28,15 @@ class _ItemListState extends State<ItemList> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            itens[0],
+            this.widget._title,
             style: TextStyle(fontSize: 18.0),
           ),
           Text(
-            itens[1],
+            this.widget._description,
             style: TextStyle(fontSize: 15.0),
           ),
           Text(
-            itens[2],
+            'R\$' + Constants.currency.format(this.widget._price),
             style: TextStyle(fontSize: 18.0),
           )
         ],
@@ -57,17 +60,17 @@ class _ItemListState extends State<ItemList> {
                       size: 80.0,
                     ),
                     Text(
-                      itens[0],
+                      this.widget._title,
                       style: TextStyle(fontSize: 22.0),
                     ),
                     Text(
-                      itens[1],
+                      this.widget._description,
                       style: TextStyle(fontSize: 18.0),
                     ),
                   ],
                 ),
               ),
-              QuantityButton(),
+              QuantityButton(this.widget._id, this.widget._title, this.widget._price),
             ],
           ),
         );
