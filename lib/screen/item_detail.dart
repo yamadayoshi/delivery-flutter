@@ -1,4 +1,3 @@
-import 'package:delivery/component/item_checkout.dart';
 import 'package:delivery/component/quantity_button.dart';
 import 'package:delivery/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -24,22 +23,17 @@ class _ItemListState extends State<ItemList> {
         Icons.all_inclusive,
         size: 55.0,
       ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            this.widget._title,
-            style: TextStyle(fontSize: 18.0),
-          ),
-          Text(
-            this.widget._description,
-            style: TextStyle(fontSize: 15.0),
-          ),
-          Text(
-            'R\$' + Constants.currency.format(this.widget._price),
-            style: TextStyle(fontSize: 18.0),
-          )
-        ],
+      title: Text(
+        this.widget._title,
+        style: TextStyle(fontSize: 18.0),
+      ),
+      subtitle: Text(
+        this.widget._description,
+        style: TextStyle(fontSize: 15.0),
+      ),
+      trailing: Text(
+        'R\$ ' + Constants.currency.format(this.widget._price),
+        style: TextStyle(fontSize: 18.0),
       ),
     );
   }
@@ -70,7 +64,8 @@ class _ItemListState extends State<ItemList> {
                   ],
                 ),
               ),
-              QuantityButton(this.widget._id, this.widget._title, this.widget._price),
+              QuantityButton(
+                  this.widget._id, this.widget._title, this.widget._price),
             ],
           ),
         );

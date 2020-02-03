@@ -17,7 +17,8 @@ class _HomeState extends State<Home> {
     new ItemList(
         11, 'Hamburguer de carne', 'Maravilhoso hamburguer da casa', 22.9),
     new ItemList(6, 'X Salada', 'Muito alface', 18.5),
-    new ItemList(21, 'X Egg', 'Caipira', 19.5)
+    new ItemList(21, 'X Egg', 'Caipira', 19.5),
+    new ItemList(21, 'X Bacon', 'Pork', 23.8)
   ];
 
   @override
@@ -32,16 +33,21 @@ class _HomeState extends State<Home> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Icon(
-                    Icons.supervised_user_circle,
-                    color: Colors.deepOrangeAccent,
-                    size: 55.0,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, 'login');
+                    },
+                    child: Icon(
+                      Icons.supervised_user_circle,
+                      color: Colors.deepOrangeAccent,
+                      size: 48.0,
+                    ),
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 10.0),
                     child: Text(
                       'Olá User',
-                      style: TextStyle(fontSize: 18.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
                   )
                 ],
@@ -70,9 +76,6 @@ class _HomeState extends State<Home> {
   }
 
   void _callCheckout() {
-    int checkoutSize =
-        Provider.of<ItemCheckoutData>(context, listen: false).getSize();
-
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -87,12 +90,12 @@ class _HomeState extends State<Home> {
             ),
             Expanded(
               flex: 5,
-              child: checkoutSize > 0
+              child: Provider.of<ItemCheckoutData>(context, listen: true).getSize() > 0
                   ? new ListView.builder(
-                      itemCount: checkoutSize,
+                      itemCount: Provider.of<ItemCheckoutData>(context, listen: true).getSize(),
                       itemBuilder: (BuildContext context, int index) {
                         return Provider.of<ItemCheckoutData>(context,
-                                listen: false)
+                                listen: true)
                             .checkoutList[index];
                       })
                   : Center(
@@ -104,18 +107,18 @@ class _HomeState extends State<Home> {
             ),
             Container(
               margin: EdgeInsets.only(right: 10.0, bottom: 5.0),
-              child: Row(
+              child: Provider.of<ItemCheckoutData>(context, listen: true).getSize() > 0 ? Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Text('Total: ', style: TextStyle(fontSize: 20.0)),
+                  Text('Total: R\$ ', style: TextStyle(fontSize: 20.0)),
                   Text(Constants.currency.format(Provider.of<ItemCheckoutData>(context, listen: false).getTotalValue()),
-                      style: TextStyle(fontSize: 21.6))
+                      style: TextStyle(fontSize: 20.0))
                 ],
-              ),
+              ) : Container(),
             ),
-            BottomButton('Pedir', () {
+            Provider.of<ItemCheckoutData>(context, listen: true).getSize() > 0 ? BottomButton('Pedir', () {
               Navigator.pop(context);
-            })
+            }) : Container()
           ],
         );
       },

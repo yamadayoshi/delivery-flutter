@@ -9,6 +9,17 @@ class ItemCheckoutData extends ChangeNotifier {
     notifyListeners();
   }
 
+  deleteItem(int index) {
+    checkoutList.removeAt(index).item;
+    notifyListeners();
+  }
+
+  bool clear() {
+    checkoutList.clear();
+
+    return checkoutList.length == 0;
+  }
+
   int getSize() {
     return checkoutList.length;
   }

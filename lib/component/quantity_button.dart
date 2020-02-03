@@ -21,6 +21,7 @@ class _QuantityButtonState extends State<QuantityButton> {
   int _qtd = 1;
 
   @override
+  // ignore: must_call_super
   void initState() {
     _controller = new TextEditingController(text: _qtd.toString());
   }
