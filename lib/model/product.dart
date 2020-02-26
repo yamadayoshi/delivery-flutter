@@ -1,20 +1,49 @@
 import 'package:delivery/component/quantity_button.dart';
 import 'package:delivery/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'dart:convert' as convert;
 
-class ItemList extends StatefulWidget {
+class Product extends StatefulWidget {
   final int _id;
   final String _title;
   final String _description;
   final double _price;
+  final String _img;
+  final int _status;
+  // final DateTime _registration;
 
-  ItemList(this._id, this._title, this._description, this._price);
+  static List<Product> productList = [];
+
+  Product(this._id, this._title, this._description, this._price, this._img, this._status);
 
   @override
-  _ItemListState createState() => _ItemListState();
+  _ProductState createState() => _ProductState();
+
+  static Future<List<Product>> fetchProduct() async {
+    final String endpoint = "http://192.168.0.102:8080/api/products";
+
+    Response response = await get(endpoint);
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = convert.jsonDecode(response.body);      
+
+      for (dynamic product in jsonResponse) {
+        productList.add(Product(
+            product['id'],
+            product['name'],
+            product['description'],
+            product['price'] as double,
+            product['img'],
+            product['status']));
+      }
+    }
+
+    return productList;
+  }
 }
 
-class _ItemListState extends State<ItemList> {
+class _ProductState extends State<Product> {
   @override
   Widget build(BuildContext context) {
     return ListTile(

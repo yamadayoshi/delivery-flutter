@@ -53,6 +53,12 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    configurations.all {
+        resolutionStrategy {
+            force 'androidx.media:media:1.0.0'
+        }
+    }
 }
 
 flutter {

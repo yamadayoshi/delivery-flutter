@@ -1,9 +1,10 @@
 import 'package:delivery/model/item_checkout_data.dart';
-import 'package:delivery/screen/item_detail.dart';
+import 'package:delivery/model/product.dart';
 import 'package:delivery/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../component/bottom_button.dart';
 
@@ -13,13 +14,21 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<ItemList> itens = [
-    new ItemList(
-        11, 'Hamburguer de carne', 'Maravilhoso hamburguer da casa', 22.9),
-    new ItemList(6, 'X Salada', 'Muito alface', 18.5),
-    new ItemList(21, 'X Egg', 'Caipira', 19.5),
-    new ItemList(21, 'X Bacon', 'Pork', 23.8)
-  ];
+  // List<ItemList> itens = [
+  //   new ItemList(
+  //       11, 'Hamburguer de carne', 'Maravilhoso hamburguer da casa', 22.9),
+  //   new ItemList(6, 'X Salada', 'Muito alface', 18.5),
+  //   new ItemList(21, 'X Egg', 'Caipira', 19.5),
+  //   new ItemList(21, 'X Bacon', 'Pork', 23.8)
+  // ];
+
+  Future<List<Product>> fetchedProduct;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchedProduct = Product.fetchProduct();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +70,32 @@ class _HomeState extends State<Home> {
             ),
             Expanded(
               flex: 10,
-              child: ListView.builder(
-                itemCount: itens.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return itens[index];
+              child: FutureBuilder<List<Product>>(
+                future: fetchedProduct,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    SpinKitFadingCircle(
+                      itemBuilder: (BuildContext context, int index) {
+                        return DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: index.isEven ? Colors.red : Colors.green,
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  if (snapshot.hasError) {
+
+                  }
+
+                  List<Product> productList = snapshot.hasData ? snapshot.data : [];
+
+                  return ListView.builder(
+                    itemCount: productList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return productList[index];
+                    },
+                  );
                 },
               ),
             ),
@@ -90,9 +121,13 @@ class _HomeState extends State<Home> {
             ),
             Expanded(
               flex: 5,
-              child: Provider.of<ItemCheckoutData>(context, listen: true).getSize() > 0
+              child: Provider.of<ItemCheckoutData>(context, listen: true)
+                          .getSize() >
+                      0
                   ? new ListView.builder(
-                      itemCount: Provider.of<ItemCheckoutData>(context, listen: true).getSize(),
+                      itemCount:
+                          Provider.of<ItemCheckoutData>(context, listen: true)
+                              .getSize(),
                       itemBuilder: (BuildContext context, int index) {
                         return Provider.of<ItemCheckoutData>(context,
                                 listen: true)
@@ -107,18 +142,28 @@ class _HomeState extends State<Home> {
             ),
             Container(
               margin: EdgeInsets.only(right: 10.0, bottom: 5.0),
-              child: Provider.of<ItemCheckoutData>(context, listen: true).getSize() > 0 ? Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Text('Total: R\$ ', style: TextStyle(fontSize: 20.0)),
-                  Text(Constants.currency.format(Provider.of<ItemCheckoutData>(context, listen: false).getTotalValue()),
-                      style: TextStyle(fontSize: 20.0))
-                ],
-              ) : Container(),
+              child: Provider.of<ItemCheckoutData>(context, listen: true)
+                          .getSize() >
+                      0
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Text('Total: R\$ ', style: TextStyle(fontSize: 20.0)),
+                        Text(
+                            Constants.currency.format(
+                                Provider.of<ItemCheckoutData>(context,
+                                        listen: false)
+                                    .getTotalValue()),
+                            style: TextStyle(fontSize: 20.0))
+                      ],
+                    )
+                  : Container(),
             ),
-            Provider.of<ItemCheckoutData>(context, listen: true).getSize() > 0 ? BottomButton('Pedir', () {
-              Navigator.pop(context);
-            }) : Container()
+            Provider.of<ItemCheckoutData>(context, listen: true).getSize() > 0
+                ? BottomButton('Pedir', () {
+                    Navigator.pop(context);
+                  })
+                : Container()
           ],
         );
       },
