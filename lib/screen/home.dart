@@ -1,8 +1,10 @@
+import 'package:delivery/component/item_checkout.dart';
 import 'package:delivery/model/item_checkout_data.dart';
 import 'package:delivery/model/product.dart';
 import 'package:delivery/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -14,14 +16,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // List<ItemList> itens = [
-  //   new ItemList(
-  //       11, 'Hamburguer de carne', 'Maravilhoso hamburguer da casa', 22.9),
-  //   new ItemList(6, 'X Salada', 'Muito alface', 18.5),
-  //   new ItemList(21, 'X Egg', 'Caipira', 19.5),
-  //   new ItemList(21, 'X Bacon', 'Pork', 23.8)
-  // ];
-
   Future<List<Product>> fetchedProduct;
 
   @override
@@ -160,8 +154,26 @@ class _HomeState extends State<Home> {
                   : Container(),
             ),
             Provider.of<ItemCheckoutData>(context, listen: true).getSize() > 0
-                ? BottomButton('Pedir', () {
+                ? BottomButton('Pedir', () async {
+                    int count = 0;
+                    StringBuffer orderItens = new StringBuffer();
+                    List<ItemCheckout> checkout = Provider.of<ItemCheckoutData>(context, listen: false).checkoutList;
+
+                    for(ItemCheckout item in checkout) {                   
+                      count++;                      
+
+                      String isFinal = checkout.length != count ? ";":""; 
+                      orderItens.write('${item.id.toString()},${item.qtd},Notes$isFinal');
+                    }
+
+                    Response orderResponse = await get("http://192.168.0.102:8080/api/order/add?clientId=1&itens=$orderItens&status=1&notes=Tocar a campainha");
+
                     Navigator.pop(context);
+
+                    if(orderResponse.statusCode == 200) 
+                      Provider.of<ItemCheckoutData>(context, listen: false).checkoutList.clear();                      
+                    else
+                      print('Error while order. Error code: ${orderResponse.statusCode}');
                   })
                 : Container()
           ],
