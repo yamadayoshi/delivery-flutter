@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:delivery/component/quantity_button.dart';
 import 'package:delivery/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
 import 'dart:convert' as convert;
 
@@ -9,24 +11,25 @@ class Product extends StatefulWidget {
   final String _title;
   final String _description;
   final double _price;
-  final String _img;
   final int _status;
   // final DateTime _registration;
 
   static List<Product> productList = [];
 
-  Product(this._id, this._title, this._description, this._price, this._img, this._status);
+  Product(this._id, this._title, this._description, this._price, this._status);
 
   @override
   _ProductState createState() => _ProductState();
 
   static Future<List<Product>> fetchProduct() async {
-    final String endpoint = "http://192.168.0.102:8080/api/products";
+    final String endpoint = "${Constants.endpoint}api/products";
 
     Response response = await get(endpoint);
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonResponse = convert.jsonDecode(response.body);      
+      List<dynamic> jsonResponse = convert.jsonDecode(response.body);
+
+      productList.clear();
 
       for (dynamic product in jsonResponse) {
         productList.add(Product(
@@ -34,7 +37,6 @@ class Product extends StatefulWidget {
             product['name'],
             product['description'],
             product['price'] as double,
-            product['img'],
             product['status']));
       }
     }
@@ -48,9 +50,16 @@ class _ProductState extends State<Product> {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: _callBottomSheet,
-      leading: Icon(
-        Icons.all_inclusive,
-        size: 55.0,
+      leading: Container(
+        width: 75.0,
+        child: CachedNetworkImage(
+          imageUrl: "${Constants.endpoint}/product/image/${this.widget._id}",
+          placeholder: (context, url) => SpinKitThreeBounce(
+            color: Colors.grey,
+            size: 30.0,
+          ),
+          errorWidget: (context, url, error) => Icon(Icons.error),
+        ),
       ),
       title: Text(
         this.widget._title,
@@ -58,7 +67,8 @@ class _ProductState extends State<Product> {
       ),
       subtitle: Text(
         this.widget._description,
-        style: TextStyle(fontSize: 15.0),
+        style: TextStyle(fontSize: 14.0),
+        maxLines: 2,
       ),
       trailing: Text(
         'R\$ ' + Constants.currency.format(this.widget._price),
@@ -75,20 +85,42 @@ class _ProductState extends State<Product> {
           child: Column(
             children: <Widget>[
               Expanded(
-                flex: 6,
-                child: Column(
+                flex: 2,
+                child: CachedNetworkImage(
+                  imageUrl:
+                      "${Constants.endpoint}/product/image/${this.widget._id}",
+                  placeholder: (context, url) => SpinKitThreeBounce(
+                    color: Colors.grey,
+                    size: 30.0,
+                  ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+              ),
+              Divider(),
+              Expanded(
+                flex: 4,
+                child: ListView(
                   children: <Widget>[
-                    Icon(
-                      Icons.all_inclusive,
-                      size: 80.0,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0, bottom: 4.0),
+                      child: Text(
+                        this.widget._title,
+                        style: TextStyle(fontSize: 20.0),
+                      ),
                     ),
-                    Text(
-                      this.widget._title,
-                      style: TextStyle(fontSize: 22.0),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0, bottom: 4.0),
+                      child: Text(
+                        'R\$ ' + Constants.currency.format(this.widget._price),
+                        style: TextStyle(fontSize: 18.0),
+                      ),
                     ),
-                    Text(
-                      this.widget._description,
-                      style: TextStyle(fontSize: 18.0),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0, bottom: 4.0),
+                      child: Text(
+                        this.widget._description,
+                        style: TextStyle(fontSize: 18.0, color: Colors.grey),
+                      ),
                     ),
                   ],
                 ),

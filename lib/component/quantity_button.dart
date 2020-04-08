@@ -31,7 +31,7 @@ class _QuantityButtonState extends State<QuantityButton> {
     return Expanded(
       flex: 1,
       child: Container(
-        color: Colors.yellowAccent,
+        color: Colors.orangeAccent,
         child: Row(
           children: <Widget>[
             quantityController(),

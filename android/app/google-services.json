@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1061776560468",
+    "firebase_url": "https://notification-c7e7d.firebaseio.com",
+    "project_id": "notification-c7e7d",
+    "storage_bucket": "notification-c7e7d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061776560468:android:37caf8182f19a3ad2078c1",
+        "android_client_info": {
+          "package_name": "com.yoshi.delivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1061776560468-92i7g6lpngfn11em831nisngbtfd9cv3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yoshi.delivery",
+            "certificate_hash": "72a9e81219f801afab1e03903c2e8f724a663e30"
+          }
+        },
+        {
+          "client_id": "1061776560468-kiqvcudslsek7h0pgn7n9bqbcacn7mjv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKaEus1auAZRM9e89Eqop3p9BR8c1uays"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1061776560468-kiqvcudslsek7h0pgn7n9bqbcacn7mjv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,14 +5,19 @@ class RoundedTextField extends StatelessWidget {
   final Color _hintColor;
   final Color _enabledColor;
   final Color _focusedColor;
+  final TextEditingController _textController;
+  final bool _passwd;
 
-  RoundedTextField(this._hint, this._hintColor, this._enabledColor, this._focusedColor);
+  RoundedTextField(this._hint, this._hintColor, this._enabledColor,
+      this._focusedColor, this._textController, this._passwd);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0),
       child: TextField(
+        controller: _textController,
+        obscureText: _passwd,
         decoration: InputDecoration(
           hintText: _hint,
           hintStyle: TextStyle(color: _hintColor),

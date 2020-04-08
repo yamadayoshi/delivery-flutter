@@ -27,10 +27,8 @@ class ItemCheckoutData extends ChangeNotifier {
   double getTotalValue() {
     double total = 0.0;
 
-    checkoutList.forEach((item) => {
-      total += (item.qtd * item.value)
-    });
-    
+    checkoutList.forEach((item) => {total += (item.qtd * item.value)});
+
     return total;
   }
 
