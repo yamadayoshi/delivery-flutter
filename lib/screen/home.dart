@@ -1,3 +1,4 @@
+import 'package:delivery/model/item_checkout_data.dart';
 import 'package:delivery/model/product.dart';
 import 'package:delivery/screen/checkout.dart';
 import 'package:delivery/utils/firebase_notification.dart';
@@ -5,6 +6,7 @@ import 'package:delivery/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../component/bottom_button.dart';
@@ -120,7 +122,45 @@ class _HomeState extends State<Home> {
                   },
                 ),
               ),
-              BottomButton('Cart', () => Checkout.callCheckout(context))
+              Expanded(
+                flex: 1,
+                child: Stack(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () => Checkout.callCheckout(context),
+                      child: Container(
+                        alignment: Alignment.center,
+                        color: Colors.orangeAccent,
+                        child: Text(
+                          'Cart',
+                          style: TextStyle(fontSize: 22.0),
+                        ),
+                      ),
+                    ),
+                    Provider.of<ItemCheckoutData>(context, listen: true).getSize() > 0 ? Positioned(
+                      left: MediaQuery.of(context).size.width * 0.85,
+                      top: MediaQuery.of(context).size.height * 0.015,
+                      child: InkResponse(
+                        child: Container(
+                          height: 35,
+                          width: 35,
+                          decoration: new BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${Provider.of<ItemCheckoutData>(context, listen: true).getSize()}',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ) : Container()
+                    // BottomButton('Cart', () => Checkout.callCheckout(context))
+                  ],
+                ),
+              )
             ],
           ),
         ),

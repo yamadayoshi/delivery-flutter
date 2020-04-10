@@ -57,7 +57,7 @@ class CompleteOrder extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: 8,
+                    flex: 10,
                     child: Card(
                       child: ListView.builder(
                         itemCount:
@@ -72,18 +72,18 @@ class CompleteOrder extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                          padding: EdgeInsets.only(
-                              top: 8.0, left: 12.0, right: 12.0, bottom: 8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text('Total: ', style: TextStyle(fontSize: 21.0)),
-                              Text(
-                                  'R\$ ${Constants.currency.format(Provider.of<ItemCheckoutData>(context, listen: false).getTotalValue())}',
-                                  style: TextStyle(fontSize: 20.0))
-                            ],
-                          ),
-                        ),
+                    padding: EdgeInsets.only(
+                        top: 8.0, left: 12.0, right: 12.0, bottom: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('Total: ', style: TextStyle(fontSize: 21.0)),
+                        Text(
+                            'R\$ ${Constants.currency.format(Provider.of<ItemCheckoutData>(context, listen: false).getTotalValue())}',
+                            style: TextStyle(fontSize: 20.0))
+                      ],
+                    ),
+                  ),
                   BottomButton(
                     'Order',
                     () {
@@ -102,10 +102,11 @@ class CompleteOrder extends StatelessWidget {
   void _completeOrder(BuildContext context, String addressId) async {
     String userId = await Util.getUserId();
 
-    print('${Constants.endpoint}api/order/add?clientId=$userId&addressId=$addressId&itens=${prepareItens(context)}&status=1&notes=Tocar a campainha');
+    print(
+        '${Constants.endpoint}api/order/add?clientId=$userId&addressId=$addressId&itens=${_prepareItens(context)}&status=1&notes=Tocar a campainha');
 
     Response response = await get(
-        '${Constants.endpoint}api/order/add?clientId=$userId&addressId=$addressId&itens=${prepareItens(context)}&status=1&notes=Tocar a campainha');
+        '${Constants.endpoint}api/order/add?clientId=$userId&addressId=$addressId&itens=${_prepareItens(context)}&status=1&notes=Tocar a campainha');
 
     if (response.statusCode == 200) {
       Provider.of<ItemCheckoutData>(context, listen: false)
@@ -120,7 +121,7 @@ class CompleteOrder extends StatelessWidget {
       print('Error ${response.statusCode}');
   }
 
-  String prepareItens(BuildContext context) {
+  String _prepareItens(BuildContext context) {
     StringBuffer orderItens = new StringBuffer();
     int count = 0;
     List<ItemCheckout> itens =
