@@ -29,6 +29,9 @@
 .pub/
 pubspec.lock
 /build/
+.directory
+.flutter-plugins-dependencies
+.vscode/launch.json
 
 # Android related
 **/android/**/gradle-wrapper.jar
