@@ -1,6 +1,7 @@
-import 'package:delivery/model/item_checkout_data.dart';
+import 'package:delivery/model/product_checkout.dart';
 import 'package:delivery/model/product.dart';
 import 'package:delivery/screen/checkout.dart';
+import 'package:delivery/screen/product_detail.dart';
 import 'package:delivery/utils/firebase_notification.dart';
 import 'package:delivery/utils/util.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
-import '../component/bottom_button.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -37,6 +36,7 @@ class _HomeState extends State<Home> {
           onRefresh: _onRefresh,
           child: Column(
             children: <Widget>[
+              // header
               Container(
                 margin: EdgeInsets.only(left: 10.0),
                 child: Row(
@@ -93,6 +93,7 @@ class _HomeState extends State<Home> {
                 child: Image.asset('images/hamburguer.png',
                     height: 110, width: 110),
               ),
+              // body list
               Expanded(
                 flex: 10,
                 child: FutureBuilder(
@@ -112,7 +113,7 @@ class _HomeState extends State<Home> {
                           ? ListView.builder(
                               itemCount: snapshot.data.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return snapshot.data[index];
+                                return ProductDetail(snapshot.data[index]);
                               },
                             )
                           : Center(
@@ -137,26 +138,30 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
-                    Provider.of<ItemCheckoutData>(context, listen: true).getSize() > 0 ? Positioned(
-                      left: MediaQuery.of(context).size.width * 0.85,
-                      top: MediaQuery.of(context).size.height * 0.015,
-                      child: InkResponse(
-                        child: Container(
-                          height: 35,
-                          width: 35,
-                          decoration: new BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${Provider.of<ItemCheckoutData>(context, listen: true).getSize()}',
-                              style: TextStyle(fontSize: 18),
+                    Provider.of<ProductCheckout>(context, listen: true)
+                                .getSize() >
+                            0
+                        ? Positioned(
+                            left: MediaQuery.of(context).size.width * 0.85,
+                            top: MediaQuery.of(context).size.height * 0.015,
+                            child: InkResponse(
+                              child: Container(
+                                height: 35,
+                                width: 35,
+                                decoration: new BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${Provider.of<ProductCheckout>(context, listen: true).getSize()}',
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ) : Container()
+                          )
+                        : Container()
                     // BottomButton('Cart', () => Checkout.callCheckout(context))
                   ],
                 ),

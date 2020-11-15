@@ -5,7 +5,7 @@ import 'package:delivery/screen/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'model/item_checkout_data.dart';
+import 'model/product_checkout.dart';
 import 'screen/home.dart';
 
 void main() => runApp(MyApp());
@@ -13,8 +13,10 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ItemCheckoutData(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ProductCheckout())
+      ],
       child: MaterialApp(
         title: 'Delivery',
         theme: ThemeData(
@@ -25,8 +27,9 @@ class MyApp extends StatelessWidget {
           'login': (BuildContext context) => new Login(),
           'home': (BuildContext context) => new Home(),
           'client': (BuildContext context) => new Client(),
-          'addressManagement': (BuildContext context) => new AddressManagement(),
-          'completeOrder': (BuildContext context) => new CompleteOrder(),         
+          'addressManagement': (BuildContext context) =>
+              new AddressManagement(),
+          'completeOrder': (BuildContext context) => new CompleteOrder(),
         },
       ),
     );

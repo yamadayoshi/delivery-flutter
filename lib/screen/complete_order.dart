@@ -1,6 +1,6 @@
 import 'package:delivery/component/bottom_button.dart';
-import 'package:delivery/component/item_checkout.dart';
-import 'package:delivery/model/item_checkout_data.dart';
+import 'package:delivery/model/product_checkout.dart';
+import 'package:delivery/model/picked_product.dart';
 import 'package:delivery/screen/home.dart';
 import 'package:delivery/utils/constants.dart';
 import 'package:delivery/utils/util.dart';
@@ -56,21 +56,21 @@ class CompleteOrder extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 10,
-                    child: Card(
-                      child: ListView.builder(
-                        itemCount:
-                            Provider.of<ItemCheckoutData>(context, listen: true)
-                                .getSize(),
-                        itemBuilder: (BuildContext context, int index) {
-                          return Provider.of<ItemCheckoutData>(context,
-                                  listen: true)
-                              .checkoutList[index];
-                        },
-                      ),
-                    ),
-                  ),
+                  // Expanded(
+                  //   flex: 10,
+                  //   child: Card(
+                  //     child: ListView.builder(
+                  //       itemCount:
+                  //           Provider.of<PickedProductCheckoutData>(context, listen: true)
+                  //               .getSize(),
+                  //       itemBuilder: (BuildContext context, int index) {
+                  //         return Provider.of<PickedProductCheckoutData>(context,
+                  //                 listen: true)
+                  //             .checkoutList[index];
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
                   Padding(
                     padding: EdgeInsets.only(
                         top: 8.0, left: 12.0, right: 12.0, bottom: 8.0),
@@ -79,7 +79,7 @@ class CompleteOrder extends StatelessWidget {
                       children: <Widget>[
                         Text('Total: ', style: TextStyle(fontSize: 21.0)),
                         Text(
-                            'R\$ ${Constants.currency.format(Provider.of<ItemCheckoutData>(context, listen: false).getTotalValue())}',
+                            'R\$ ${Constants.currency.format(Provider.of<ProductCheckout>(context, listen: false).getTotalValue())}',
                             style: TextStyle(fontSize: 20.0))
                       ],
                     ),
@@ -109,8 +109,8 @@ class CompleteOrder extends StatelessWidget {
         '${Constants.endpoint}api/order/add?clientId=$userId&addressId=$addressId&itens=${_prepareItens(context)}&status=1&notes=Tocar a campainha');
 
     if (response.statusCode == 200) {
-      Provider.of<ItemCheckoutData>(context, listen: false)
-          .checkoutList
+      Provider.of<ProductCheckout>(context, listen: false)
+          .pickedProdList
           .clear();
 
       Navigator.pushAndRemoveUntil(
@@ -124,15 +124,15 @@ class CompleteOrder extends StatelessWidget {
   String _prepareItens(BuildContext context) {
     StringBuffer orderItens = new StringBuffer();
     int count = 0;
-    List<ItemCheckout> itens =
-        Provider.of<ItemCheckoutData>(context, listen: false).checkoutList;
+    List<PickedProduct> itens =
+        Provider.of<ProductCheckout>(context, listen: false).pickedProdList;
 
-    for (ItemCheckout item in itens) {
-      count++;
+    // for (ProductCheckout item in itens) {
+    //   count++;
 
-      String isFinal = itens.length != count ? ";" : "";
-      orderItens.write('${item.id.toString()},${item.qtd},Notes$isFinal');
-    }
+    //   String isFinal = itens.length != count ? ";" : "";
+    //   orderItens.write('${item.product.id.toString()},1,Notes$isFinal');
+    // }
 
     return orderItens.toString();
   }

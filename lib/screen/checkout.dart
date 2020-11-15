@@ -1,10 +1,12 @@
 import 'package:delivery/component/bottom_button.dart';
-import 'package:delivery/model/item_checkout_data.dart';
+import 'package:delivery/component/checkout/checkout_product.dart';
+import 'package:delivery/model/product_checkout.dart';
 import 'package:delivery/screen/address_management.dart';
 import 'package:delivery/utils/constants.dart';
 import 'package:delivery/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class Checkout {
@@ -21,7 +23,7 @@ class Checkout {
                 style: Constants.kTitleTextStyle,
               ),
             ),
-            Provider.of<ItemCheckoutData>(context, listen: true).getSize() == 0
+            Provider.of<ProductCheckout>(context, listen: true).getSize() == 0
                 ? Expanded(
                     child: Center(
                       child: Text(
@@ -36,14 +38,41 @@ class Checkout {
                         Expanded(
                           flex: 5,
                           child: ListView.builder(
-                            itemCount: Provider.of<ItemCheckoutData>(context,
+                            itemCount: Provider.of<ProductCheckout>(context,
                                     listen: true)
                                 .getSize(),
-                            itemBuilder: (BuildContext context, int index) {
-                              return Provider.of<ItemCheckoutData>(context,
-                                      listen: true)
-                                  .checkoutList[index];
-                            },
+                            itemBuilder: (BuildContext context, int index) =>
+                                Column(
+                              children: [
+                                Dismissible(
+                                  key: UniqueKey(),
+                                  direction: DismissDirection.endToStart,
+                                  background: Container(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 20),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFFFE6E6),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Spacer(),
+                                        SvgPicture.asset(
+                                            "assets/icons/Trash.svg"),
+                                      ],
+                                    ),
+                                  ),
+                                  child: CheckoutProduct(
+                                      Provider.of<ProductCheckout>(context,
+                                              listen: true)
+                                          .pickedProdList[index]),
+                                  onDismissed: (direction) {
+                                    Provider.of<ProductCheckout>(context,
+                                            listen: false)
+                                        .delete(index);
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Divider(),
@@ -53,10 +82,14 @@ class Checkout {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('Total: ', style: TextStyle(fontSize: 21.0)),
                               Text(
-                                  'R\$ ${Constants.currency.format(Provider.of<ItemCheckoutData>(context, listen: false).getTotalValue())}',
-                                  style: TextStyle(fontSize: 20.0))
+                                'Total: ',
+                                style: TextStyle(fontSize: 21.0),
+                              ),
+                              Text(
+                                'R\$ ${Constants.currency.format(Provider.of<ProductCheckout>(context, listen: false).getTotalValue())}',
+                                style: TextStyle(fontSize: 20.0),
+                              )
                             ],
                           ),
                         ),

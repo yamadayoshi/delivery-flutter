@@ -139,9 +139,14 @@ class Register {
                                       fieldErrors = [
                                         _nameTextController.text.isEmpty,
                                         _usernameTextController.text.isEmpty,
-                                        !(_phoneTextController.text.length >= 10),
-                                        !_emailTextController.text.contains('@') || !_emailTextController.text.contains('.com'),
-                                        !(_passwdTextController.text.length >= 8)
+                                        !(_phoneTextController.text.length >=
+                                            10),
+                                        !_emailTextController.text
+                                                .contains('@') ||
+                                            !_emailTextController.text
+                                                .contains('.com'),
+                                        !(_passwdTextController.text.length >=
+                                            8)
                                       ];
 
                                       //dismiss the keyboard
@@ -151,12 +156,15 @@ class Register {
                                         Response userResponse = await get(
                                             "${Constants.endpoint}api/client/add?name=${_nameTextController.text}&username=${_usernameTextController.text}&passwd=${_passwdTextController.text}&email=${_emailTextController.text}&phone=${_phoneTextController.text}");
 
+                                        print(userResponse.body);
+
                                         if (userResponse.statusCode == 200) {
-                                          Map<String, dynamic> client = jsonDecode(userResponse.body);
+                                          Map<String, dynamic> client =
+                                              jsonDecode(userResponse.body);
 
                                           // login user
-                                          Util.loginUser(client);                                          
-                                          
+                                          Util.loginUser(client);
+
                                           // push home and remove login from stack
                                           Navigator.of(context)
                                               .pushNamedAndRemoveUntil(
@@ -178,7 +186,7 @@ class Register {
                                             'Please fill the fields above!',
                                             'Close',
                                             () {});
-                                        
+
                                         FocusScope.of(context).nextFocus();
                                       }
                                     },
