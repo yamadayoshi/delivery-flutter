@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Util {
-  static Future<String> getUserId() async {
+  static Future<String> getClientId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     return prefs.getInt('id') != null ? prefs.getInt('id').toString() : '';
@@ -14,7 +14,7 @@ class Util {
     return prefs.getString('name') != null ? prefs.getString('name') : '';
   }
 
-  static void loginUser(Map<String, dynamic> client) async {  
+  static void loginUser(Map<String, dynamic> client) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     int id = client['id'];
@@ -39,23 +39,27 @@ class Util {
   static Future<List<String>> getAddress() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    String id = prefs.getString('addressId') != null ? prefs.getString('addressId'):'';
-    String nickname = prefs.getString('addressNickname') != null ? prefs.getString('addressNickname'):'';
-    String addr = prefs.getString('address') != null ? prefs.getString('address'):'';
+    String id = prefs.getString('addressId') != null
+        ? prefs.getString('addressId')
+        : '';
+    String nickname = prefs.getString('addressNickname') != null
+        ? prefs.getString('addressNickname')
+        : '';
+    String addr =
+        prefs.getString('address') != null ? prefs.getString('address') : '';
 
     List<String> address = [id, nickname, addr];
 
     return address;
   }
 
-  static showSnack(BuildContext context, String text, String labelAction, Function function) {
+  static showSnack(BuildContext context, String text, String labelAction,
+      Function function) {
     final snackBar = SnackBar(
       content: Text(text),
       action: SnackBarAction(
         label: labelAction,
-        onPressed: () {
-          
-        },
+        onPressed: () {},
       ),
     );
 

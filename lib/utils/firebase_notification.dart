@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:delivery/utils/requests.dart';
+import 'package:delivery/utils/util.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -42,11 +44,12 @@ class FirebaseNotification {
         const IosNotificationSettings(sound: true, badge: true, alert: true));
     firebaseMessaging.getToken().then((token) {
       fcmToken = token;
+      Util.getClientId().then((id) => setFirebaseToken(id, token));
       print(token);
     });
   }
 
-    Future messaging() {
+  Future messaging() {
     final String serverToken =
         "AAAA9zbQkVQ:APA91bFLXEpeCzw1uBnV1TAW2dqCZiL2aXxn0NrvM-En1VnO3Ws4A9RltzjRn14bxjTv09IxPMaA0Rznb55B678WvlBcWpi4cVQXB6jcQioR5tkkq1SIZbv3LIvyHrrTEkGYvoX6Q8TB";
 

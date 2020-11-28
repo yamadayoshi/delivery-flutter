@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:delivery/utils/constants.dart';
+import 'package:delivery/utils/requests.dart';
 import 'package:delivery/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -18,6 +18,15 @@ class Address extends StatefulWidget {
 
   static List<Address> addressList = [];
 
+  String get city => _city;
+  String get complement => _complement;
+  String get neighborhood => _neighborhood;
+  String get nickname => _nickname;
+  int get number => _number;
+  String get public_area => _public_area;
+  String get uf => _uf;
+  String get zipcode => _zipcode;
+
   Address(this._id, this._city, this._complement, this._neighborhood,
       this._nickname, this._number, this._public_area, this._uf, this._zipcode);
 
@@ -25,14 +34,9 @@ class Address extends StatefulWidget {
   _AddressState createState() => _AddressState();
 
   static Future<List<Address>> fetchAddress() async {
-    String userId = await Util.getUserId();
+    String clientId = await Util.getClientId();
 
-    final String endpoint =
-        '${Constants.endpoint}api/address/client?clientId=$userId';
-
-    print(endpoint);
-
-    Response response = await get(endpoint);
+    Response response = await getAddressClient(clientId);
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse =
@@ -56,11 +60,24 @@ class Address extends StatefulWidget {
 
     return addressList;
   }
+
+  Map<String, dynamic> toJson(String clientId) => {
+        'client': {'id': clientId},
+        'nickname': nickname,
+        'zipcode': zipcode,
+        'publicArea': public_area,
+        'number': number,
+        'neighborhood': neighborhood,
+        'complement': complement,
+        'city': city,
+        'uf': uf,
+        'status': '1'
+      };
 }
 
 class _AddressState extends State<Address> {
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     String address =
         '${this.widget._public_area}, Nº ${this.widget._number}, ${this.widget._neighborhood} - ${this.widget._city} - ${this.widget._uf}';
 
@@ -73,7 +90,8 @@ class _AddressState extends State<Address> {
 
             Navigator.pushNamed(context, 'completeOrder');
           },
-          title: Text(this.widget._nickname, style: TextStyle(fontSize: 18.0), maxLines: 3),
+          title: Text(this.widget._nickname,
+              style: TextStyle(fontSize: 18.0), maxLines: 3),
           subtitle: Text(address, style: TextStyle(fontSize: 15.0)),
         ),
       ),

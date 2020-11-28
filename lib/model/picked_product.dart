@@ -14,4 +14,7 @@ class PickedProduct extends ChangeNotifier {
   String toString() {
     return '${_product.toString()} and $_notes';
   }
+
+  Map<String, dynamic> toJson(int orderId) =>
+      {'orderId': orderId, 'itemId': _product.id, 'quantity': 1, 'status': 1};
 }

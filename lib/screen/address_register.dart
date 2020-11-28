@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:delivery/component/rounded_address_text_field.dart';
-import 'package:delivery/utils/constants.dart';
+import 'package:delivery/model/address.dart';
+import 'package:delivery/utils/requests.dart';
 import 'package:delivery/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,7 +10,7 @@ import 'package:http/http.dart';
 
 class AddressRegister {
   static final _nicknameTextController = TextEditingController();
-  static final _cepTextController = TextEditingController();
+  static final _zipcodeTextController = TextEditingController();
   static final _addressTextController = TextEditingController();
   static final _numberTextController = TextEditingController();
   static final _neighborhoodTextController = TextEditingController();
@@ -29,7 +30,7 @@ class AddressRegister {
 
   static callRegister(BuildContext context) async {
     final textFieldFocusNode = FocusNode();
-    String userId = await Util.getUserId();
+    String userId = await Util.getClientId();
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -55,7 +56,7 @@ class AddressRegister {
                     textInputAction: TextInputAction.done,
                     keyboardType: TextInputType.number,
                     focusNode: textFieldFocusNode,
-                    controller: _cepTextController,
+                    controller: _zipcodeTextController,
                     onTap: () {
                       textFieldFocusNode.canRequestFocus = true;
                     },
@@ -236,18 +237,28 @@ class AddressRegister {
 
     if (_nicknameTextController.text.isNotEmpty &&
         _numberTextController.text.isNotEmpty) {
-      Response userResponse = await get(
-          "${Constants.endpoint}api/address/add?clientId=$userId&nickname=${_nicknameTextController.text}&zipcode=${_cepTextController.text}&publicArea=${_addressTextController.text}&number=${_numberTextController.text}&complement=${_complementTextController.text}&neighborhood=${_neighborhoodTextController.text}&city=${_cityTextController.text}&uf=${_ufTextController.text}");
+      Address address = new Address(
+          0,
+          _cityTextController.text.trim(),
+          _complementTextController.text.trim(),
+          _neighborhoodTextController.text.trim(),
+          _nicknameTextController.text.trim(),
+          int.parse(_numberTextController.text.trim()),
+          _addressTextController.text.trim(),
+          _ufTextController.text.trim(),
+          _zipcodeTextController.text.trim());
 
-      print(
-          "${Constants.endpoint}api/address/add?clientId=$userId&nickname=${_nicknameTextController.text}&zipcode=${_cepTextController.text}&publicArea=${_addressTextController.text}&number=${_numberTextController.text}&complement=${_complementTextController.text}&neighborhood=${_neighborhoodTextController.text}&city=${_cityTextController.text}&uf=${_ufTextController.text}");
+      Response clientResponse = await addAddress(address, userId);
 
-      if (userResponse.statusCode == 200) {
+      if (clientResponse.statusCode == 200) {
         Navigator.popAndPushNamed(context, 'addressManagement');
         _clear();
       } else {
-        Util.showSnack(contextBuilder,
-            'Error registering user, check the connection!', 'Close', () {});
+        Util.showSnack(
+            contextBuilder,
+            'Error registering user, check the connection! ${clientResponse.statusCode}',
+            'Close',
+            () {});
 
         FocusScope.of(context).nextFocus();
       }
@@ -260,9 +271,9 @@ class AddressRegister {
   }
 
   static void getAddress(BuildContext contextBuilder) async {
-    if (_cepTextController.text.isNotEmpty) {
+    if (_zipcodeTextController.text.isNotEmpty) {
       Response response = await get(
-          "https://viacep.com.br/ws/${_cepTextController.text}/json/");
+          "https://viacep.com.br/ws/${_zipcodeTextController.text}/json/");
 
       if (response.statusCode == 200) {
         Map<String, dynamic> address = jsonDecode(response.body);
@@ -272,7 +283,7 @@ class AddressRegister {
           _neighborhoodTextController.text = address['bairro'];
           _cityTextController.text = address['localidade'];
           _ufTextController.text = address['uf'];
-        } 
+        }
       } else
         print('Zipcode doesnt exist');
     }
@@ -280,7 +291,7 @@ class AddressRegister {
 
   static void _clear() {
     _nicknameTextController.clear();
-    _cepTextController.clear();
+    _zipcodeTextController.clear();
     _addressTextController.clear();
     _numberTextController.clear();
     _neighborhoodTextController.clear();

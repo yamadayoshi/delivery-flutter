@@ -1,13 +1,16 @@
 import 'package:delivery/component/bottom_button.dart';
+import 'package:delivery/component/checkout/checkout_product.dart';
+import 'package:delivery/model/order.dart';
 import 'package:delivery/model/product_checkout.dart';
-import 'package:delivery/model/picked_product.dart';
 import 'package:delivery/screen/home.dart';
 import 'package:delivery/utils/constants.dart';
+import 'package:delivery/utils/requests.dart';
 import 'package:delivery/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert' as convert;
 
 class CompleteOrder extends StatelessWidget {
   @override
@@ -56,21 +59,22 @@ class CompleteOrder extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Expanded(
-                  //   flex: 10,
-                  //   child: Card(
-                  //     child: ListView.builder(
-                  //       itemCount:
-                  //           Provider.of<PickedProductCheckoutData>(context, listen: true)
-                  //               .getSize(),
-                  //       itemBuilder: (BuildContext context, int index) {
-                  //         return Provider.of<PickedProductCheckoutData>(context,
-                  //                 listen: true)
-                  //             .checkoutList[index];
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
+                  Expanded(
+                    flex: 10,
+                    child: Card(
+                      child: ListView.builder(
+                        itemCount:
+                            Provider.of<ProductCheckout>(context, listen: true)
+                                .getSize(),
+                        itemBuilder: (BuildContext context, int index) {
+                          return CheckoutProduct(Provider.of<ProductCheckout>(
+                                  context,
+                                  listen: true)
+                              .pickedProdList[index]);
+                        },
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: EdgeInsets.only(
                         top: 8.0, left: 12.0, right: 12.0, bottom: 8.0),
@@ -100,40 +104,35 @@ class CompleteOrder extends StatelessWidget {
   }
 
   void _completeOrder(BuildContext context, String addressId) async {
-    String userId = await Util.getUserId();
+    String clientId = await Util.getClientId();
 
-    print(
-        '${Constants.endpoint}api/order/add?clientId=$userId&addressId=$addressId&itens=${_prepareItens(context)}&status=1&notes=Tocar a campainha');
+    String notes = 'Bell';
 
-    Response response = await get(
-        '${Constants.endpoint}api/order/add?clientId=$userId&addressId=$addressId&itens=${_prepareItens(context)}&status=1&notes=Tocar a campainha');
+    // POST order
+    Response response =
+        await addOrder(new Order(clientId, addressId, '1', notes));
 
     if (response.statusCode == 200) {
-      Provider.of<ProductCheckout>(context, listen: false)
-          .pickedProdList
-          .clear();
+      int orderId = convert.jsonDecode(response.body)['id'];
 
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (BuildContext context) => Home()),
-          (Route<dynamic> route) => false);
+      // POST itens
+      Response itensResponse = await addOrderItem(
+          Provider.of<ProductCheckout>(context, listen: false).pickedProdList,
+          orderId);
+
+      if (itensResponse.statusCode == 200) {
+        Provider.of<ProductCheckout>(context, listen: false)
+            .pickedProdList
+            .clear();
+
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (BuildContext context) => Home()),
+            (Route<dynamic> route) => false);
+      } else {
+        print('Error create order itens ${response.statusCode}');
+      }
     } else
-      print('Error ${response.statusCode}');
-  }
-
-  String _prepareItens(BuildContext context) {
-    StringBuffer orderItens = new StringBuffer();
-    int count = 0;
-    List<PickedProduct> itens =
-        Provider.of<ProductCheckout>(context, listen: false).pickedProdList;
-
-    // for (ProductCheckout item in itens) {
-    //   count++;
-
-    //   String isFinal = itens.length != count ? ";" : "";
-    //   orderItens.write('${item.product.id.toString()},1,Notes$isFinal');
-    // }
-
-    return orderItens.toString();
+      print('Error create order ${response.statusCode}');
   }
 }

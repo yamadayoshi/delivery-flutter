@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:delivery/model/product_checkout.dart';
 import 'package:delivery/model/product.dart';
 import 'package:delivery/screen/checkout.dart';
@@ -60,7 +62,7 @@ class _HomeState extends State<Home> {
                     Container(
                       margin: EdgeInsets.only(left: 10.0),
                       child: FutureBuilder<String>(
-                        future: Util.getUser(), // a Future<String> or null
+                        future: Util.getUser(),
                         builder: (BuildContext context,
                             AsyncSnapshot<String> snapshot) {
                           switch (snapshot.connectionState) {
@@ -100,8 +102,20 @@ class _HomeState extends State<Home> {
                   future: Product.fetchProduct(),
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState == ConnectionState.none)
-                      return Text('No connection');
-                    else if (!snapshot.hasData)
+                      return Center(
+                        child: Text(
+                          'No connection',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      );
+                    else if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          'Error reach server',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      );
+                    } else if (!snapshot.hasData)
                       return Center(
                         child: SpinKitThreeBounce(
                           color: Colors.orangeAccent,
@@ -162,9 +176,19 @@ class _HomeState extends State<Home> {
                             ),
                           )
                         : Container()
-                    // BottomButton('Cart', () => Checkout.callCheckout(context))
                   ],
                 ),
+              ),
+              BottomNavigationBar(
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.home), label: 'Home'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.food_bank_sharp), label: 'Order'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.account_circle), label: 'Account')
+                ],
+                currentIndex: 0,
               )
             ],
           ),

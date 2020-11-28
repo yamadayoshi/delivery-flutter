@@ -1,4 +1,4 @@
-import 'package:delivery/utils/constants.dart';
+import 'package:delivery/utils/requests.dart';
 import 'package:http/http.dart';
 import 'dart:convert' as convert;
 
@@ -20,9 +20,7 @@ class Product {
   static List<Product> productList = [];
 
   static Future<List<Product>> fetchProduct() async {
-    final String endpoint = "${Constants.endpoint}api/products";
-
-    Response response = await get(endpoint);
+    Response response = await getProducts();
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = convert.jsonDecode(response.body);

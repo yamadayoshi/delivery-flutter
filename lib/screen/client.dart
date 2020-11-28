@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Client extends StatelessWidget {
-  List<String> options = ['Profile', 'Address'];
+  final List<String> options = ['Profile', 'Address'];
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +56,7 @@ class Client extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () {
-                        if(index == 1)
-                          _callAddress(context)                        ;
+                        if (index == 1) _callAddress(context);
                       },
                       child: Container(
                           height: 28.0,
@@ -93,12 +92,16 @@ class Client extends StatelessWidget {
   }
 
   _callAddress(BuildContext context) {
-    showModalBottomSheet(context: context, builder: (context) {      
-      return Column(
-        children: <Widget>[
-          RoundedTextField('Address', Colors.grey, Colors.amberAccent, Colors.amberAccent, null, false)
-        ],
-      );
-    });
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          children: <Widget>[
+            RoundedTextField('Address', Colors.grey, Colors.amberAccent,
+                Colors.amberAccent, null, false)
+          ],
+        );
+      },
+    );
   }
 }

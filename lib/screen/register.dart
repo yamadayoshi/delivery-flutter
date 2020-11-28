@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:delivery/component/rounded_icon_text_field.dart';
-import 'package:delivery/utils/constants.dart';
+import 'package:delivery/model/client_app.dart';
+import 'package:delivery/utils/requests.dart';
 import 'package:delivery/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -153,8 +154,15 @@ class Register {
                                       FocusScope.of(context).unfocus();
 
                                       if (validFields(fieldErrors)) {
-                                        Response userResponse = await get(
-                                            "${Constants.endpoint}api/client/add?name=${_nameTextController.text}&username=${_usernameTextController.text}&passwd=${_passwdTextController.text}&email=${_emailTextController.text}&phone=${_phoneTextController.text}");
+                                        ClientApp clientApp = ClientApp(
+                                            _nameTextController.text,
+                                            _usernameTextController.text,
+                                            _passwdTextController.text,
+                                            _emailTextController.text,
+                                            _phoneTextController.text);
+
+                                        Response userResponse =
+                                            await registerClient(clientApp);
 
                                         print(userResponse.body);
 
